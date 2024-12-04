@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import numpy as np
-from create_embeddings import get_tfidf_embedding, get_bag_of_words_embedding
+from create_embeddings import get_tfidf_embedding, get_bag_of_words_embedding, get_glove_embedding
 
 
 def return_to_tensor(txt):
@@ -13,13 +13,14 @@ def return_to_tensor(txt):
 
 imdb_df = pd.read_csv('imdb_with_glove_bert_embeddings.csv')
 imdb_df['cls_bert'] = imdb_df['cls_bert'].apply(return_to_tensor)
+imdb_df.drop('encode_glove', axis=1, inplace=True)
 
 X = imdb_df['review']
 y = imdb_df['sentiment']
-X_bert = imdb_df['cls_bert']
+X_bert = np.vstack(imdb_df['cls_bert'])
+X_glove = get_glove_embedding(imdb_df)
 
 labs = [1 if label == "positive" else 0 for label in y]
-#embeddings = get_batch_embeddings(X, tokenizer, model, device, batch_size=32)
 labels = torch.tensor(labs).float().unsqueeze(1)
 
 X_dev, X_test, y_dev, y_test = train_test_split(X, labels, test_size=0.2, random_state=42)
@@ -27,6 +28,10 @@ X_dev_tfidf, X_test_tfidf = get_tfidf_embedding(X_dev, X_test)
 X_dev_bow, X_test_bow = get_bag_of_words_embedding(X_dev, X_test)
 
 X_dev_bert, X_test_bert, y_dev_bert, y_test_bert = train_test_split(X_bert, labels, test_size=0.2, random_state=42)
+
+X_dev_glove, X_test_glove, y_dev_glove, y_test_glove = train_test_split(X_glove, labels, test_size=0.2, random_state=42)
+
+# TODO: Can also try stemming (see slide 40 of lecture 9)
 
 # tfidf logistic regression
 # regr_tfidf = LogisticRegression()
@@ -49,4 +54,9 @@ y_pred = regr_bert.predict(X_test_bert)
 accuracy = accuracy_score(y_test_bert, y_pred)
 print(accuracy)
 
-# glove logistic regression
+# # glove logistic regression
+# regr_glove = LogisticRegression()
+# regr_glove.fit(X_dev_glove, y_dev_glove)
+# y_pred = regr_glove.predict(X_test_glove)
+# accuracy = accuracy_score(y_test_glove, y_pred)
+# print(accuracy)
