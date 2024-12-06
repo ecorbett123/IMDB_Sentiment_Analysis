@@ -102,17 +102,15 @@ def get_cls_sentence(sentence, tokenizer, model):
 imdb_df = pd.read_csv('imdb_with_glove_bert_embeddings.csv')
 
 # Read in orignal file, apply preprocessing to text
-# imdb_df['review'] = imdb_df['review'].apply(lambda x: text_preprocessing(x))
+imdb_df['review'] = imdb_df['review'].apply(lambda x: text_preprocessing(x))
 X = imdb_df['review']
 y = imdb_df['sentiment']
 X_dev, X_test, y_dev, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 X_dev_tfidf, X_test_tfidf = get_tfidf_embedding(X_dev, X_test)
 X_dev_bow, X_test_bow = get_bag_of_words_embedding(X_dev, X_test)
 
-# to generate the embedding file locally -> takes a while to run... 
-# get_glove_embedding(imdb_df)
-# print("Done with Glove")
-# get_bert_embedding(imdb_df)
-# print("Done with bert")
-# imdb_df.to_csv("imdb_with_embeddings.csv", index=False)
+# to generate the embedding file locally -> takes a while to run, but only need to run once
+get_glove_embedding(imdb_df)
+get_bert_embedding(imdb_df)
+imdb_df.to_csv("imdb_with_embeddings.csv", index=False)
 
