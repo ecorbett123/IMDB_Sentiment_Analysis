@@ -7,12 +7,16 @@ import numpy as np
 from create_embeddings import get_tfidf_embedding, get_bag_of_words_embedding, get_glove_embedding
 import matplotlib.pyplot as plt
 
+# Author: Emma Corbett
+# This file implements a logistic regression model on the bert, bow, glove, and tfidf word embeddings.
+# It finds the model with the best performance according to accuracy, and best hyperparameters using grid serach.
 
+# convert text from file back to tensor
 def return_to_tensor(txt):
     return eval("torch." + txt).numpy()
 
 
-imdb_df = pd.read_csv('imdb_with_glove_bert_embeddings.csv')
+imdb_df = pd.read_csv('../imdb_with_glove_bert_embeddings.csv')
 imdb_df['cls_bert'] = imdb_df['cls_bert'].apply(return_to_tensor)
 imdb_df.drop('encode_glove', axis=1, inplace=True)
 
@@ -24,6 +28,7 @@ X_glove = get_glove_embedding(imdb_df)
 labs = [1 if label == "positive" else 0 for label in y]
 labels = torch.tensor(labs).float().unsqueeze(1)
 
+# split data into dev and test for the embedding types
 X_dev, X_test, y_dev, y_test = train_test_split(X, labels, test_size=0.2, random_state=42)
 X_dev_tfidf, X_test_tfidf = get_tfidf_embedding(X_dev, X_test)
 X_dev_bow, X_test_bow = get_bag_of_words_embedding(X_dev, X_test)
@@ -33,7 +38,7 @@ X_dev_bert, X_test_bert, y_dev_bert, y_test_bert = train_test_split(X_bert, labe
 X_dev_glove, X_test_glove, y_dev_glove, y_test_glove = train_test_split(X_glove, labels, test_size=0.2, random_state=42)
 
 # Grid search code
-# This takes a long time to run (overnight), so can comment out grid search to just see the final model performances
+# This takes a long time to run, so can comment out grid search to just see the final model performances
 param_grid = {
     'C': [0.01, 0.1, 1, 10, 100],
     'penalty': ['l1', 'l2', 'elasticnet', 'none'],

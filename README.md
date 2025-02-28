@@ -1,5 +1,18 @@
 # COMS 4995 Applied Machine Learning: IMDB Sentiment Analysis Project
-## Authors: Alan Wong (ajw2252), Anna Micros (am6529), Emma Corbett (ec3745), Nuneke Kwetey (nfk2108), Xiqian Yuan (xy2655)
+## Author: Emma Corbett (ec3745)
+
+## Introduction
+IMDb is an online platform where users can provide ratings and reviews for various forms of visual entertainment,
+particularly movies. This analysis aims to examine the connection between the review sentiment and the textual
+content, with the ultimate goal of predicting binary sentiment ratings from the text. The goal is to develop a
+model capable of generating highly accurate sentiment predictions and offering insights into the factors that influence
+these emotions in the reviews. This will be achieved by employing and comparing a variety of machine learning and
+language models, such as logistic regression, k nearest neighbors, deep neural networks, and bert. By identifying the underlying emotions in movie reviews, this project aims to tackle the
+challenge of translating subjective judgment into quantitative metrics.
+
+## Please reach out for the full paper & results.
+
+## Notes on creating embeddings and running locally
 The main dataset for this project is IMDB Dataset.csv. It is too large to include in this repository, so can be downloaded here: https://www.kaggle.com/datasets/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews
 
 You can run create_embeddings.py with the last code block uncommented out to generate the csv file with bert and glove embeddings.

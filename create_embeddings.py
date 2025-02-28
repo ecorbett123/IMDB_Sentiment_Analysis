@@ -14,6 +14,7 @@ import re
 nltk.download('punkt_tab')
 warnings.filterwarnings(action='ignore')
 
+# This file is to preprocess and create the various embeddings for the imdb comment data
 
 # CLEANING AND PREPROCESSING
 def text_preprocessing(text):
